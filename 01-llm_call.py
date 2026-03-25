@@ -1,10 +1,11 @@
 from dotenv import load_dotenv
 from google import genai
 import re
+import os
 
 load_dotenv()
 
-client = genai.Client()
+client = genai.Client(api_key=os.getenv("GENAI_API_KEY"))
 
 
 def generate_prompt():
@@ -20,10 +21,12 @@ response = client.models.generate_content(
 )
 
 match = re.search(r"```.*?([\w\W]*?)```", response.text, re.DOTALL)
-code_content = match.group(1).strip()
-print("---Extracted code ---")
 
+code_content = match.group(1).strip()
+
+print("---Extracted code ---")
 print(code_content)
-with open("loan_calc.py", "w") as f:
+
+with open("loan_payment.py", "w") as f:
     f.write(code_content)
     f.close()
